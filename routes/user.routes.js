@@ -26,6 +26,7 @@ userRouters.get("/", (req, res, next) => {
 
 userRouters.post("/", (req, res, next) => {
   try {
+    const { name, email, password } = req.body;
     res.status(201).send(addUser(req.body));
   } catch (error) {
     next(error);

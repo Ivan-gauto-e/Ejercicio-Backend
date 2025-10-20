@@ -20,6 +20,16 @@ export function addUser(user) {
   return user;
 }
 
+addUser({
+  id: 3,
+  nombre: "Pedro",
+  email: "email@gmail.com",
+  password: "password123",
+  createdAt: new Date().toISOString(),
+});
+
+console.log(users);
+
 export function getAllUsers() {
   return users;
 }
