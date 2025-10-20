@@ -1,4 +1,5 @@
 import express from "express";
+const userRouters = express.Router();
 import {
   validateRequiredFields,
   isValidEmail,
@@ -13,3 +14,22 @@ import {
   deleteUserById,
   emailExists,
 } from "../data/users.data.js";
+import { useResolvedPath } from "react-router";
+
+userRouters.get("/", (req, res, next) => {
+  try {
+    res.json(getAllUsers());
+  } catch (error) {
+    next(error);
+  }
+});
+
+userRouters.post("/", (req, res, next) => {
+  try {
+    res.status(201).send(addUser(req.body));
+  } catch (error) {
+    next(error);
+  }
+});
+
+export default userRouters;
