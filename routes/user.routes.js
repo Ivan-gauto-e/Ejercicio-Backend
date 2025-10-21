@@ -1,10 +1,11 @@
 import express from "express";
-const userRouters = express.Router();
+const Routers = express.Router();
 import {
   validateRequiredFields,
   isValidEmail,
   isValidPassword,
   handleError,
+  requiredFields,
 } from "../utils/validation.utils.js";
 import {
   addUser,
@@ -14,9 +15,8 @@ import {
   deleteUserById,
   emailExists,
 } from "../data/users.data.js";
-import { useResolvedPath } from "react-router";
 
-userRouters.get("/", (req, res, next) => {
+Routers.get("/", (req, res, next) => {
   try {
     res.json(getAllUsers());
   } catch (error) {
@@ -24,13 +24,20 @@ userRouters.get("/", (req, res, next) => {
   }
 });
 
-userRouters.post("/", (req, res, next) => {
+Routers.post("/", async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
-    res.status(201).send(addUser(req.body));
-  } catch (error) {
-    next(error);
+    if (!validateRequiredFields(req.body, requiredFields)) {
+      throw new Error("Campos requeridos faltantes");
+    }
+    if (!isValidEmail(email)) throw new Error("Email inválido");
+    if (!isValidPassword(password)) throw new Error("Contraseña inválida");
+    if (emailExists(email)) throw new Error("El email ya está registrado");
+    const newUser = addUser(req.body);
+    res.status(201).json({ newUser });
+  } catch (err) {
+    next(err);
   }
 });
 
-export default userRouters;
+export default Routers;

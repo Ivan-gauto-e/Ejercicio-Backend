@@ -1,14 +1,13 @@
+export const requiredFields = ["name", "email", "password"];
+
 export function validateRequiredFields(data, requiredFields) {
-  const missing = requiredFields.filter((f) => {
-    const v = data[f];
-    return (
-      v === undefined ||
-      v === null ||
-      (typeof v === "string" && v.trim() === "")
-    );
-  });
-  if (missing.length > 0) {
-    throw new Error(`Faltan campos requeridos: ${missing.join(", ")}`);
+  for (let i = 0; i < requiredFields.length; i++) {
+    const campoRequerido = requiredFields[i];
+    const value = data[campoRequerido];
+    if (!value || value.trim().length === 0) {
+      console.log("se requiere el campo:", campoRequerido);
+      return false;
+    }
   }
   return true;
 }
